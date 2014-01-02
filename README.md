@@ -39,6 +39,7 @@ Open your browser and go to this address
 
 ## Todo next
 
+- create sandbox to avoid bad code
 - compile to other languages such as Java, Python, PHP, Ruby.
 - auto detect language syntax highlighting
 - add code snippet
