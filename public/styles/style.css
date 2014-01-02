@@ -1,0 +1,154 @@
+@font-face {
+  font-family: 'segoeblack';
+  src: url('../fonts/SegoeWP-Black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'segoelight';
+  src: url('../fonts/SegoeWP-Semilight.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background: #2e4d64;
+  margin: 0;
+  font-family: 'segoelight';
+  color: #fff;
+}
+
+h1, h2, h3, h4 {
+  text-align: center;
+  font-family: 'segoeblack';
+  text-transform: uppercase;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+h1 {
+  font-size: 3em;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+img {
+  display: block;
+  width: 100%;
+}
+
+.article {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px 0;
+  display: block;
+}
+
+#menu {
+  background: #222225;
+  width: 100%;
+  position: relative;
+  display: block;
+  text-align: right;
+}
+ul.menu {
+  background: transparent;
+  padding: 0;
+  list-style: none;
+  margin: 0;
+  display: inline-block;
+}
+ul.menu > li {
+  display: inline-block;
+  padding: 20px 0;
+  margin: 0;
+}
+ul.menu > li > a:hover, ul.menu > li > a.active {
+  background: #3db4d8;
+}
+ul.menu > li > a {
+  padding: 20px 15px;
+  font-family: 'segoeblack';
+  text-decoration: none;
+  color: #fff;
+}
+#menu.stuck {
+  position:fixed;
+  top:0;
+  z-index: 999;
+  box-shadow:0 2px 4px rgba(0, 0, 0, .3);
+}
+
+.logosmall {
+  background: url(../images/logosmall.png) no-repeat;
+  width: 150px;
+  height: 33px;
+  display: inline-block;
+  margin: 0;
+  margin-top: 15px;
+  float: left;
+}
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.btn {
+  padding: 20px;
+  font-family: 'segoeblack';
+  background: #2e4d64;
+  display: inline-block;
+  border: 2px solid #fff;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1em;
+  font-weight: normal;
+}
+.module {
+  background: #fff;
+  color: #2e4d64;
+  padding: 20px;
+  width:100%;
+  margin: 10px 0;
+}
+.module a {
+  color: #2e4d64;
+}
+textarea {
+  background: #222225;
+  color: #fff;
+  width: 100%;
+  border: none;
+}
+
+.box {
+  background: #222225;
+  width: 60%;
+  padding: 40px;
+  margin: 0 auto;
+  font-family: 'segoeblack';
+  text-align: center;
+}
+.message {
+  background:#3db4d8;
+  padding: 10px;
+  margin: 10px;
+}
+input {
+  padding: 10px;
+  font-family: 'segoeblack';
+}
+
+.loading {
+  background: url(../images/loader.gif) no-repeat center center;
+  height: 60px;
+  width: 100%;
+}
+input[type="password"] {
+  color: #fff;
+  background: #222225;
+  color: #fff;
+  width: 100%;
+  border: none;
+}

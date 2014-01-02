@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Compiler - Sonny Lab</title>
+	<link rel="stylesheet" href="/styles/grid.css">
+	<link rel="stylesheet" href="/styles/style.css">
+	<script src="/scripts/jquery.js"></script>
+</head>
+<body>
+	<div id="menu">
+		<div class="container">
+			<a href="http://sonnylab.com/"><div class="logosmall"></div></a>
+			<ul class="menu">
+				<li><a href="http://sonnylab.com/api/compiler">Compiler</a></li>
+				<li><a href="http://sonnylab.com/api/snippet">Snippet</a></li>
+				<li><a href="http://sonnylab.com/api/beat">Beat</a></li>
+				<li><a href="http://sonnylab.com/">Back To SonnyLab</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="article">
+		<div class="grid">
+			<form method="post" id="myCode">
+			<div class="col-2-3">
+					<textarea name="script" id="textarea" cols="30" rows="25">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+	cout &lt;&lt; &quot;Hello Kave&quot; &lt;&lt; endl;
+	return 0;
+}</textarea>
+					<button class="btn" type="submit">Save and Compile!</button>
+				
+			</div>
+			<div class="col-1-3">
+				<div class="loading" style="display:none"></div>
+				<h3>Input</h3>
+				<textarea name="inputs" id="inputs" cols="30" rows="4"></textarea>
+				<h3>Compile Result</h3>
+				<textarea name="result" id="result" cols="30" rows="8" disabled="disabled"></textarea>
+				Execution time : <span id="time"></span>
+			</div>
+			</form>
+		</div>
+	</div>
+	<script>
+	function inject(callback) {
+	    var baseUrl = "/src/";
+	    
+	    var load = window.__ace_loader__ = function(path, module, callback) {
+	        var head = document.getElementsByTagName('head')[0];
+	        var s = document.createElement('script');
+	    
+	        s.src = baseUrl + path;
+	        head.appendChild(s);
+	        
+	        s.onload = function() {
+	            window.__ace_shadowed__.require([module], callback);
+	        };
+	    };
+
+	    load('ace-compiler.js', "ace/ext/textarea", function() {
+	        var ace = window.__ace_shadowed__;
+	        
+	        ace.options.mode = "c_cpp";
+	        var Event = ace.require("ace/lib/event");
+	        var areas = document.getElementsByTagName("textarea");
+	        for (var i = 0; i < areas.length; i++) {
+	            Event.addListener(areas[i], "click", function(e) {
+	                if (e.detail == 3) {
+	                    ace.transformTextarea(e.target, load);
+	                }
+	            });
+	        }
+	        callback && callback();
+	    });
+	}
+
+	// Call the inject function to load the ace files.
+	var textAce;
+	$(document).ready(function() {
+		if (!localStorage.mycode) {
+			localStorage.mycode = $('#textarea').val();
+		}
+		$('#textarea').val(localStorage.mycode);
+		inject(function () {
+		    // Transform the textarea on the page into an ace editor.
+		    var ace = window.__ace_shadowed__;
+		    var t = document.querySelector("textarea");
+		    textAce = ace.transformTextarea(t, window.__ace_loader__);
+		    setTimeout(function(){textAce.setDisplaySettings(false)});
+		    // console.log(textAce);
+		});
+
+		$('#myCode').submit(function (event) {
+			event.preventDefault();
+			$('.loading').slideDown('slow');
+			$('#result').html('');
+			$('#time').html('');
+			$('#textarea').val(textAce.getSession().getValue());
+			localStorage.mycode = textAce.getSession().getValue();
+			var datastring = $("#myCode").serialize();
+			console.log(datastring);
+			$("#myCode :input").attr("disabled", true);
+			$.ajax({
+			    type: "POST",
+			    url: "/compile",
+			    timeout: 60000,
+			    data: datastring,
+			    dataType: "json",
+			    success: function(data) {
+			        if (data.success) {
+			        	$('#result').html(data.result);
+			        	$('#time').html(data.timeExec + ' ms');
+			        } else {
+			        	$('#result').html(data.error);
+			        }
+			        $("#myCode :input").attr("disabled", false);
+			        $('.loading').slideUp('slow');
+			    },
+			    error: function(error){
+			        console.log(error);
+			        $('.result').html(error);
+			        $("#myCode :input").attr("disabled", false);
+			        $('.loading').slideUp('slow');
+			    }
+			});
+			// return false;
+		});
+	});
+
+	</script>
+		<div class="article footer">
+			&copy; Copyright &copy; 2014 Sonnylab
+		</div>
+	</body>
+</html>
