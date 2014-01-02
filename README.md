@@ -27,6 +27,8 @@ Open your browser and go to this address
 
 	http://localhost:3000/compile
 
+![screenshot](http://imageshack.com/scaled/medium/5/q76s.jpg)
+
 ## Features
 
 - [Ace](https://github.com/ajaxorg/ace) code editor
