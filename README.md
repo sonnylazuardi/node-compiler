@@ -27,7 +27,7 @@ Open your browser and go to this address
 
 	http://localhost:3000/compile
 
-![screenshot](http://imageshack.com/scaled/medium/5/q76s.jpg)
+![screenshot](http://imageshack.com/scaled/large/5/q76s.jpg)
 
 ## Features
 
