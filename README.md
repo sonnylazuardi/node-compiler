@@ -29,6 +29,10 @@ Open your browser and go to this address
 
 ![screenshot](http://imageshack.com/scaled/large/5/q76s.jpg)
 
+You may configure how much queue that can be served by a server by changing the following line
+
+    var maxQueue = 10;
+
 ## Features
 
 - [Ace](https://github.com/ajaxorg/ace) code editor
