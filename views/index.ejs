@@ -103,17 +103,22 @@
 		}
 
 		if (localStorage['mycode_' + mode]) {
+			// load from localStorage if the code is already stored there
 			loadFromLocalStorage(mode, callback);
 		} else {
+			// otherwise, load from file through AJAX
 			loadFromAjax(mode, callback);
 		}
 	}
 
 	// Call the inject function to load the ace files.
 	var textAce,
+		// the initial language
 		mode = 'cpp';
 	$(document).ready(function() {
+		// load the initial code
 		loadCodeArea(mode, function(err, code) {
+			// if there's error loading the code, then just return
 			if (err) return;
 
 			$('#code-area').val(code);
