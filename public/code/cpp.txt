@@ -1,0 +1,7 @@
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+        cout &lt;&lt; &quot;Hello Kave&quot; &lt;&lt; endl;
+        return 0;
+}
