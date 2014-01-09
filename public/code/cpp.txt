@@ -1,7 +1,7 @@
-#include &lt;iostream&gt;
+#include <iostream>;
 using namespace std;
 
 int main() {
-        cout &lt;&lt; &quot;Hello Kave&quot; &lt;&lt; endl;
-        return 0;
+    cout << "Hello, Welcome to Node-Compiler. Let's learn C++ shall we?" << endl;
+    return 0;
 }

@@ -23,9 +23,8 @@
 		<div class="grid">
 			<form method="post" id="myCode">
 			<div class="col-2-3">
-					<textarea name="script" id="snippet" cols="30" rows="25"></textarea>
-					<button class="btn" type="submit">Save and Compile!</button>
-				
+				<textarea name="script" id="code-area" cols="30" rows="25"></textarea>
+				<button class="btn" type="submit">Save and Compile!</button>
 			</div>
 			<div class="col-1-3">
 				<div class="loading" style="display:none"></div>
@@ -71,56 +70,97 @@
 	    });
 	}
 
-	// Call the inject function to load the ace files.
-	var textAce;
-	$(document).ready(function() {
-		if (!localStorage.mycode) {
-			localStorage.mycode = $('#textarea').val();
-		}
-		$('#textarea').val(localStorage.mycode);
-		inject(function () {
-		    // Transform the textarea on the page into an ace editor.
-		    var ace = window.__ace_shadowed__;
-		    var t = document.querySelector("textarea");
-		    textAce = ace.transformTextarea(t, window.__ace_loader__);
-		    setTimeout(function(){textAce.setDisplaySettings(false)});
-		    // console.log(textAce);
-		});
+	// load code from localStorage
+	function loadFromLocalStorage(mode, callback) {
+		// eg: localStorage.mycode_cpp
+		callback && callback(null, localStorage['mycode_' + mode]);
+	}
 
-		$('#myCode').submit(function (event) {
-			event.preventDefault();
-			$('.loading').slideDown('slow');
-			$('#result').html('');
-			$('#time').html('');
-			$('#textarea').val(textAce.getSession().getValue());
-			localStorage.mycode = textAce.getSession().getValue();
-			var datastring = $("#myCode").serialize();
-			console.log(datastring);
-			$("#myCode :input").attr("disabled", true);
-			$.ajax({
-			    type: "POST",
-			    url: "/compile",
-			    timeout: 60000,
-			    data: datastring,
-			    dataType: "json",
-			    success: function(data) {
-			        if (data.success) {
-			        	$('#result').html(data.result);
-			        	$('#time').html(data.timeExec + ' ms');
-			        } else {
-			        	$('#result').html(data.error);
-			        }
-			        $("#myCode :input").attr("disabled", false);
-			        $('.loading').slideUp('slow');
-			    },
-			    error: function(error){
-			        console.log(error);
-			        $('.result').html(error);
-			        $("#myCode :input").attr("disabled", false);
-			        $('.loading').slideUp('slow');
-			    }
+	// save code to localStorage
+	function saveToLocalStorage(mode, code) {
+		// eg: localStorage.mycode_cpp = '';
+		localStorage['mycode_' + mode] = code;
+	}
+
+	// load code through ajax from server
+	function loadFromAjax(mode, callback) {
+		$.get('code/' + mode + '.txt')
+		.done(function(data) {
+			saveToLocalStorage(mode, data);
+			callback && callback(null, data);
+		})
+		.fail(function() {
+			callback && callback("failed to load code", null);
+		});
+	}
+
+	// load code for #code-area
+	function loadCodeArea(mode, callback) {
+		var code;
+
+		if (!mode) {
+			mode = "cpp";
+		}
+
+		if (localStorage['mycode_' + mode]) {
+			loadFromLocalStorage(mode, callback);
+		} else {
+			loadFromAjax(mode, callback);
+		}
+	}
+
+	// Call the inject function to load the ace files.
+	var textAce,
+		mode = 'cpp';
+	$(document).ready(function() {
+		loadCodeArea(mode, function(err, code) {
+			if (err) return;
+
+			$('#code-area').val(code);
+			inject(function () {
+			    // Transform the textarea on the page into an ace editor.
+			    var ace = window.__ace_shadowed__;
+			    var t = document.querySelector("textarea");
+			    textAce = ace.transformTextarea(t, window.__ace_loader__);
+			    setTimeout(function(){textAce.setDisplaySettings(false)});
+			    // console.log(textAce);
 			});
-			// return false;
+
+			$('#myCode').submit(function (event) {
+				event.preventDefault();
+				$('.loading').slideDown('slow');
+				$('#result').html('');
+				$('#time').html('');
+				$('#code-area').val(textAce.getSession().getValue());
+				saveToLocalStorage(mode, textAce.getSession().getValue());
+				var datastring = $("#myCode").serialize();
+				console.log(datastring);
+				$("#myCode :input").attr("disabled", true);
+				$.ajax({
+				    type: "POST",
+				    url: "/compile",
+				    timeout: 60000,
+				    data: datastring,
+				    dataType: "json",
+				    success: function(data) {
+				        if (data.success) {
+				        	$('#result').html(data.result);
+				        	$('#time').html(data.timeExec + ' ms');
+				        } else {
+				        	$('#result').html(data.error);
+				        }
+				        $("#myCode :input").attr("disabled", false);
+				        $('.loading').slideUp('slow');
+				    },
+				    error: function(error){
+				        console.log(error);
+				        $('.result').html(error);
+				        $("#myCode :input").attr("disabled", false);
+				        $('.loading').slideUp('slow');
+				    }
+				});
+				// return false;
+			});
 		});
 	});
 
