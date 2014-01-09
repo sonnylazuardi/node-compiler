@@ -30,13 +30,14 @@ var child = child_process.fork(__dirname + '/child.js');
 // var child = child_process.fork(__dirname + '/child-win.js');
 var taskId = 0;
 var tasks = {};
+var maxQueue = 10; // menentukan seberapa banyak queue yang bisa dilayani oleh satu server
 
 function addTask(data, callback) {
     // taskId++;
     // if (taskId > 10) taskId = 1;
     Sync(function() {
         taskId++;
-        if (taskId > 10) taskId = 1;
+        if (taskId > maxQueue) taskId = 1;
     
         child.send({id: taskId, script:data.script, inputs:data.inputs});
     
