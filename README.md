@@ -44,6 +44,10 @@ Open your browser and go to this address
 - auto detect language syntax highlighting
 - add code snippet
 
+## Disclaimer
+
+Don't use it in production server, It's still dangerous to let compile dangerous c++ code in your server
+
 ## License
 
 (The MIT License)
